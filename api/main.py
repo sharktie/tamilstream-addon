@@ -1,3 +1,8 @@
+import sys
+import os
+# Ensure project root is in path so `from api.xxx import ...` works on Vercel
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse

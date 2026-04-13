@@ -1,17 +1,13 @@
 {
-  "builds": [
-    {
-      "src": "api/main.py",
-      "use": "@vercel/python",
-      "config": {
-        "includeFiles": ["data/**", "templates/**"]
-      }
+  "functions": {
+    "api/main.py": {
+      "includeFiles": "data/**|templates/**"
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "api/main.py"
+      "source": "/(.*)",
+      "destination": "/api/main"
     }
   ]
 }

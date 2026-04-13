@@ -4,6 +4,7 @@ from typing import Optional, List
 import base64
 import json
 import logging
+import urllib.parse
 from api.config import settings
 from api.models import UserConfig
 try:
@@ -31,6 +32,24 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+
+def _parse_extra(extra: str):
+    """Parse Stremio extra path segment like 'skip=100' or 'search=foo&skip=20'"""
+    skip = 0
+    search = None
+    try:
+        decoded = urllib.parse.unquote(extra)
+        for part in decoded.split("&"):
+            if "=" in part:
+                key, val = part.split("=", 1)
+                if key.strip() == "skip":
+                    skip = int(val.strip())
+                elif key.strip() == "search":
+                    search = val.strip()
+    except Exception:
+        pass
+    return skip, search
 
 
 def decode_user_config(config_str: Optional[str]) -> UserConfig:
@@ -112,8 +131,20 @@ async def catalog_root(type: str, id: str, skip: int = 0, search: Optional[str] 
     return await handle_catalog(type, id, None, skip, search)
 
 
+@router.get("/catalog/{type}/{id}/{extra}.json")
+async def catalog_root_with_extra(type: str, id: str, extra: str):
+    skip, search = _parse_extra(extra)
+    return await handle_catalog(type, id, None, skip, search)
+
+
 @router.get("/{config}/catalog/{type}/{id}.json")
 async def catalog_with_config(config: str, type: str, id: str, skip: int = 0, search: Optional[str] = None):
+    return await handle_catalog(type, id, config, skip, search)
+
+
+@router.get("/{config}/catalog/{type}/{id}/{extra}.json")
+async def catalog_with_config_and_extra(config: str, type: str, id: str, extra: str):
+    skip, search = _parse_extra(extra)
     return await handle_catalog(type, id, config, skip, search)
 
 
