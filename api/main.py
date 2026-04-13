@@ -85,8 +85,7 @@ if stremio_router:
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     if templates:
-        return templates.TemplateResponse("configure.html", {
-            "request": request,
+        return templates.TemplateResponse(request, "configure.html", {
             "app_name": settings.app_name,
             "app_version": settings.app_version,
             "app_description": settings.app_description
@@ -97,8 +96,7 @@ async def home(request: Request):
 @app.get("/configure", response_class=HTMLResponse)
 async def configure(request: Request):
     if templates:
-        return templates.TemplateResponse("configure.html", {
-            "request": request,
+        return templates.TemplateResponse(request, "configure.html", {
             "app_name": settings.app_name,
             "app_version": settings.app_version,
             "app_description": settings.app_description
@@ -125,8 +123,7 @@ async def save_configure(request: Request):
     stremio_url = f"stremio://{host}/{config_str}/manifest.json"
     
     if templates:
-        return templates.TemplateResponse("install.html", {
-            "request": request,
+        return templates.TemplateResponse(request, "install.html", {
             "app_name": settings.app_name,
             "manifest_url": manifest_url,
             "stremio_url": stremio_url,
@@ -201,8 +198,7 @@ async def configure_with_config(request: Request, config: str):
         existing_config = {}
     
     if templates:
-        return templates.TemplateResponse("configure.html", {
-            "request": request,
+        return templates.TemplateResponse(request, "configure.html", {
             "app_name": settings.app_name,
             "app_version": settings.app_version,
             "app_description": settings.app_description,
