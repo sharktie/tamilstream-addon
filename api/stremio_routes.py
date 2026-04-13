@@ -102,7 +102,7 @@ def get_manifest(config: Optional[str] = None) -> dict:
                 ]
             }
         ],
-        "idPrefixes": ["tt"],
+        "idPrefixes": ["tt", "td"],
         "behaviorHints": {
             "configurable": True,
             "configurationRequired": False
